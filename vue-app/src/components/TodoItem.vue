@@ -1,21 +1,28 @@
 <template>
-  <div class="todo-item" v-bind:class="{ 'is-complete': todo.completed }">
-    <p>
-      <input type="checkbox" name="" id="" v-on:change="markComplete" />
-      {{ todo.title }}
-      <button v-on:click="$emit('del-todo', todo.id)" class="del">x</button>
-    </p>
+  <div>
+    <div class="todo-item" v-for="todo in allTodos" :key="todo.id">
+      <p>
+        <input type="checkbox" name="" id="" v-on:change="markComplete" />
+        {{ todo.title }}
+        <button v-on:click="$emit('del-todo', todo.id)" class="del">x</button>
+      </p>
+    </div>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
 export default {
   name: "TodoItem",
-  props: ["todo"],
+  computed: mapGetters(["allTodos"]),
   methods: {
+    ...mapActions(["fetchTodos"]),
     markComplete() {
       this.todo.completed = !this.todo.completed;
     },
+  },
+  created() {
+    this.fetchTodos();
   },
 };
 </script>
